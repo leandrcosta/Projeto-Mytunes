@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Header from '../components/Header';
+/* import searchAlbumsAPI from '../services/searchAlbumsAPI'; */
 
 class Search extends Component {
   constructor() {
@@ -7,9 +8,9 @@ class Search extends Component {
 
     this.state = {
       isDisabledButton: true,
-      nameArtist: '',
+    /*       nameArtist: '',
       colectionAlbuns: [],
-      loading: true,
+      loading: true, */
     };
   }
 
@@ -23,7 +24,7 @@ class Search extends Component {
     }
   }
 
-  handlesearchArtist = async () => {
+  /*   handlesearchArtist = async () => {
     const { nameArtist } = this.state;
     this.setState({
       loading: true,
@@ -35,10 +36,10 @@ class Search extends Component {
       nameArtist: '',
       colectionAlbuns,
     });
-  }
+  } */
 
   render() {
-    const { isDisabledButton, nameArtist, colectionAlbuns, loading } = this.state;
+    const { isDisabledButton/* , nameArtist, colectionAlbuns, loading  */ } = this.state;
     return (
       <div data-testid="page-search">
         <Header />
@@ -55,7 +56,7 @@ class Search extends Component {
               data-testid="search-artist-button"
               type="button"
               disabled={ isDisabledButton }
-              onClick={ this.handlesearchArtist }
+              /* onClick={ this.handlesearchArtist } */
             >
               Pesquisar
             </button>
