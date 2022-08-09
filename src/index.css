@@ -17,3 +17,20 @@ code {
   display: flex;
   justify-content: center;
 }
+
+.login-container {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+}
+
+input {
+  margin: 5px;
+  padding: 8px;
+  width: 100%;
+}
+
+button {
+  position: inherit;
+}
