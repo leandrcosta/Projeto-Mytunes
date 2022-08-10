@@ -1,45 +1,52 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../components/Header';
-/* import searchAlbumsAPI from '../services/searchAlbumsAPI'; */
+import Loading from '../components/Loading';
+import searchAlbumsAPI from '../services/searchAlbumsAPI';
 
 class Search extends Component {
   constructor() {
     super();
 
     this.state = {
-      isDisabledButton: true,
-    /*       nameArtist: '',
-      colectionAlbuns: [],
-      loading: true, */
+      artistName: '',
+      searchArtist: '',
+      colectionAlbums: [],
+      disabledButton: true,
+      loading: false,
     };
   }
 
   handleActiveButton = ({ target }) => { // Ativa o botão de Pesquisa
-    const { value } = target;
+    const { name, value } = target;
     const lengthMin = 2;
-    if (value.length >= lengthMin) {
-      this.setState({ isDisabledButton: false });
-    } else {
-      this.setState({ isDisabledButton: true });
-    }
+    this.setState({ [name]: value }, () => {
+      if (value.length >= lengthMin) {
+        this.setState({ disabledButton: false });
+      } else {
+        this.setState({ disabledButton: true });
+      }
+    });
   }
 
-  /*   handlesearchArtist = async () => {
-    const { nameArtist } = this.state;
+  handlesearchArtist = async () => {
+    const { artistName } = this.state;
     this.setState({
       loading: true,
-      nameArtist: '',
+      searchArtist: artistName,
     });
-    const colectionAlbuns = await searchAlbumsAPI(nameArtist);
+    const colectionAlbums = await searchAlbumsAPI(artistName);
     this.setState({
       loading: false,
-      nameArtist: '',
-      colectionAlbuns,
+      artistName: '',
+      colectionAlbums,
     });
-  } */
+  }
 
   render() {
-    const { isDisabledButton/* , nameArtist, colectionAlbuns, loading  */ } = this.state;
+    const { loading, artistName,
+      disabledButton, searchArtist, colectionAlbums } = this.state;
+
     return (
       <div data-testid="page-search">
         <Header />
@@ -47,20 +54,44 @@ class Search extends Component {
           <form>
             <input
               data-testid="search-artist-input"
-              type="text"
-              name="name"
+              name="artistName"
+              value={ artistName }
               placeholder="Name of Artist"
               onChange={ this.handleActiveButton }
             />
             <button
               data-testid="search-artist-button"
               type="button"
-              disabled={ isDisabledButton }
-              /* onClick={ this.handlesearchArtist } */
+              disabled={ disabledButton }
+              onClick={ this.handlesearchArtist }
             >
               Pesquisar
             </button>
           </form>
+          {loading && <Loading />}
+          { // Renderizando os albuns retonados da busca - refatorar código
+            colectionAlbums.length === 0 ? <span>Nenhum álbum foi encontrado</span>
+              : (
+                <div>
+                  <span>{`Resultado de álbuns de: ${searchArtist}`}</span>
+                  { colectionAlbums.map((album) => (
+                    <div key={ album.collectionId }>
+                      <Link
+                        to={ `/album/${album.collectionId}` }
+                        data-testid={ `link-to-album-${album.collectionId}` }
+                      >
+                        <img
+                          src={ album.artworkUrl100 }
+                          alt={ album.collectionName }
+                        />
+                        <p>{ album.collectionName }</p>
+                        <p>{ artistName }</p>
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+              )
+          }
         </div>
       </div>
     );
